@@ -1,4 +1,4 @@
-module Prioritized/m
+module Prioritized/v0
 
 go 1.16
 
