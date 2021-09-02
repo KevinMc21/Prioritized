@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Work",
+    "difficulty": 1.8,
+    "time_ranges": [
+      {
+        "hour": 9,
+        "minute": 0,
+        "sec": 0
+      },
+      {
+        "hour": 17,
+        "minute": 0,
+        "sec": 0
+      }
+    ]
+  },
+  {
+    "name": "Personal",
+    "difficulty": 1.1,
+    "time_ranges": [
+      {
+        "hour": 7,
+        "minute": 0,
+        "sec": 0
+      },
+      {
+        "hour": 9,
+        "minute": 0,
+        "sec": 0
+      },
+      {
+        "hour": 5,
+        "minute": 30,
+        "sec": 0
+      },
+      {
+        "hour": 7,
+        "minute": 0,
+        "sec": 0
+      }
+    ]
+  }
+]
