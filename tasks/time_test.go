@@ -14,7 +14,7 @@ func TestTimeParse(t *testing.T) {
 		time_zone 	*time.Location
 	}{
 		{
-			"12:00:00+00:00",
+			"12:00:00Z",
 			[7]int{0, 1, 1, 12, 0, 0, 0},
 			time.UTC,
 		},
