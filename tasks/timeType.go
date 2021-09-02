@@ -28,7 +28,7 @@ func (dt Datetime) Parse() (t time.Time, err error) {
 
 
 func (t Time) Parse() (time.Time, error) {
-	parsed, err := time.Parse("15:04:05-07:00", string(t))
+	parsed, err := time.Parse("15:04:05Z07:00", string(t))
 	if err != nil {
 		return time.Time{}, err
 	}
