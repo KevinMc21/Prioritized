@@ -31,10 +31,11 @@ func TestTimeParse(t *testing.T) {
 		timeString := tasks.Time(tt.str)
 		
 		parsedTime, err := timeString.Parse()
-
 		if err != nil {
 			t.Errorf("failed to parse time string: %v", err.Error())
 		}
+
+		parsedTime = parsedTime.In(tt.time_zone)
 
 		if got := parsedTime.Year(); got != tt.want[0] {
 			t.Errorf("year: want %v got %v for input %v", tt.want[0], got, tt.str)
@@ -67,7 +68,7 @@ func TestTimeParse(t *testing.T) {
 
 		convertedTime := parsedTime.In(tt.time_zone)
 
-		if convertedTime.Format(time.RFC3339) != parsedTime.Format(time.RFC3339) {
+		if !convertedTime.Equal(time.Date(tt.want[0], time.Month(tt.want[1]), tt.want[2], tt.want[3], tt.want[4], tt.want[5], tt.want[6], tt.time_zone)) {
 			t.Errorf("incorrect timezone: want %v got %v for input %v", convertedTime.Location(), parsedTime.Location(), tt.str)
 			failed = true
 		}
@@ -144,7 +145,7 @@ func TestDatetimeParse(t *testing.T) {
 
 		convertedTime := parsedDatetime.In(tt.timezone)
 
-		if convertedTime.Format(time.RFC3339) != parsedDatetime.Format(time.RFC3339) {
+		if !convertedTime.Equal(time.Date(tt.want[0], time.Month(tt.want[1]), tt.want[2], tt.want[3], tt.want[4], tt.want[5], tt.want[6], tt.timezone)) {
 			t.Errorf("incorrect timezone: want %v got %v for input %v", convertedTime.Location(), parsedDatetime.Location(), tt.str)
 			failed = true
 		}

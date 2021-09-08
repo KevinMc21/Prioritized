@@ -33,7 +33,7 @@ func (t Time) Parse() (time.Time, error) {
 		return time.Time{}, err
 	}
 
-	return parsed, nil
+	return parsed.UTC(), nil
 }
 
 
