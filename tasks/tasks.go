@@ -12,3 +12,4 @@ type Task struct{
 	TaskDifficulty	float32		`json:"task_difficulty"`
 	Score		int32		`json:"score"`
 }
+
