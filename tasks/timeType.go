@@ -12,14 +12,14 @@ type Datetime string
 
 // TimeStart specifies when the period starts and TimeEnd specifies when the period ends. Stores Datetime types
 type DatetimePeriod struct{
-	TimeStart 	Datetime	`json:"time_start"`
-	TimeEnd		Datetime	`json:"time_end"`
+	TimeStart 	Datetime	`json:"datetime_start"`
+	TimeEnd		Datetime	`json:"datetime_end"`
 }
 
 // TimeStart specifies when the period starts and TimeEnd specifies when the period ends. Stores Time types
 type TimePeriod struct{
-	TimeStart	Time
-	TimeEnd		Time
+	TimeStart	Time		`json:"time_start"`
+	TimeEnd		Time		`json:"time_end"`
 }
 
 // Parse Datetime string and return time.Time object
