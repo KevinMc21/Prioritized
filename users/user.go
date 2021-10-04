@@ -2,62 +2,68 @@ package users
 
 import (
 	"Prioritized/v0/tasks"
+	"errors"
 	"fmt"
 	"sort"
 )
 
 type User struct{
-	Username	string
-	UserID		int
-	Categories	map[int]*tasks.TaskCategory
-	Tasks 		[]tasks.Task
+	OAuth		string
+	Categories	[]*tasks.TaskGrouping
 	TimePreference	float64
 }
 
+// func (u *User) UnmarshalJSON(b []byte) (e error) {
 
-func (user *User) FindCategoryParent(category *tasks.TaskCategory) (*tasks.TaskCategory, error){
-	parentCategoryID := category.ParentCategory	
-	parentCategory, ok := user.Categories[parentCategoryID]
-	if !ok {
-		return nil, fmt.Errorf("parent category_id '%v' does not exist for user '%v'", parentCategoryID, user.Username)
+// }
+
+func (user *User) FindCategoryParent(category *tasks.TaskGrouping) (*tasks.TaskGrouping, error){
+	target := category.ChildOf
+
+	for _, group := range user.Categories {
+		if group.ID == target {
+			return group, nil
+		}
 	}
 
-	return parentCategory, nil
+	return nil, errors.New("parent grouping does not exist")
 }
 
-func (user *User) GetCategory(categoryID int) (*tasks.TaskCategory, error) {
-	category, ok := user.Categories[categoryID]
-	if !ok {
-		return nil, fmt.Errorf("category_id '%v' does not exist for user '%v'", categoryID , user.Username)
+func (user *User) GetCategory(categoryID int) (*tasks.TaskGrouping, error) {
+	for _, group := range user.Categories {
+		if group.ID == categoryID {
+			return group, nil
+		}
 	}
 
-	return category, nil
+	return nil, fmt.Errorf("grouping id \"%v\" does not exist", categoryID)
 }
 
-func (user *User) GenerateNewCategoryID() int {
-	var id_list []int
-	for id := range user.Categories {
-		id_list = append(id_list, id)
+func (user *User) GenerateNewCategoryID() (int) {
+	var id_list []int	
+	for _, grouping := range user.Categories {
+		id_list = append(id_list, grouping.ID)
 	}
 
 	sort.Ints(id_list)
 
-	if id_list[0] != 0 {
-		return 0
+	if id_list[0] != 1 {
+		return 1
 	}
 
-	var prev_id int
-	for _, id := range id_list {
-		if prev_id == 0 {
-			prev_id = id
+	prev_id := 1
+	for _, num := range id_list {
+		if num == 0 || num == 1 {
+			prev_id = num
 			continue
 		}
 
-		if id != prev_id + 1 {
+		if num != prev_id + 1 {
 			return prev_id + 1
 		}
+
+		prev_id = num
 	}
 
 	return id_list[len(id_list) - 1] + 1
 }
-

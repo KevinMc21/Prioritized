@@ -22,7 +22,7 @@ type TimePeriod struct{
 	TimeEnd		Time		`json:"time_end"`
 }
 
-// Parse Datetime string and return time.Time object
+// Parse Datetime string and return time.Time object in UTC time
 func (dt Datetime) Parse() (t time.Time, err error) {
 	t, err = time.Parse(time.RFC3339, string(dt))
 	if err != nil {
@@ -32,7 +32,7 @@ func (dt Datetime) Parse() (t time.Time, err error) {
 	return t.UTC(), err
 }
 
-// Parse Time string and return time.Time object
+// Parse Time string and return time.Time object in UTC time
 func (t Time) Parse() (time.Time, error) {
 	parsed, err := time.Parse("15:04:05Z07:00", string(t))
 	if err != nil {
