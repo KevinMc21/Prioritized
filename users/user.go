@@ -4,7 +4,7 @@ import (
 	"Prioritized/v0/tasks"
 	"errors"
 	"fmt"
-	"sort"
+	"math"
 )
 
 type User struct{
@@ -41,32 +41,24 @@ func (user *User) GetCategory(categoryID int) (*tasks.TaskGrouping, error) {
 }
 
 func (user *User) GenerateNewCategoryID() (int) {
-	var id_list []int	
+	ids := make(map[int]bool)	
+	max := int(math.Inf(-1))
 	for _, grouping := range user.Categories {
-		id_list = append(id_list, grouping.ID)
-	}
-
-	sort.Ints(id_list)
-
-	if id_list[0] != 1 {
-		return 1
-	}
-
-	prev_id := 1
-	for _, num := range id_list {
-		if num == 0 || num == 1 {
-			prev_id = num
-			continue
+		ids[grouping.ID] = true
+		if max < grouping.ID {
+			max = grouping.ID
 		}
-
-		if num != prev_id + 1 {
-			return prev_id + 1
-		}
-
-		prev_id = num
 	}
 
-	return id_list[len(id_list) - 1] + 1
+	for i := 1; i < max; i++ {
+		if _, ok := ids[i]; !ok {
+			return i
+		}
+	}
+
+	return max + 1
+
+
 }
 
 // Gets all parents of a grouping including of a sub-grouping. Returns array that includes given sub-grouping + all parent groupings
