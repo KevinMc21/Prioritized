@@ -2,12 +2,11 @@ package scoring_test
 
 import (
 	"Prioritized/v0/scoring"
-	"fmt"
 	"testing"
 	"time"
 )
 
-func TestTimeScore(t *testing.T) {
+func BenchmarkTimeScore(b *testing.B) {
 	tests := []struct{
 		want		float64
 		duration 	time.Duration
@@ -39,9 +38,8 @@ func TestTimeScore(t *testing.T) {
 	}
 
 	for _, tt := range(tests) {
-		
 		ans := scoring.GiveTimeScore(tt.duration, 30) 
-		fmt.Printf("t: %v got score %v\n", tt.duration, ans)	
+		b.Logf("t: %v got score %v with time preference of: %v\n", tt.duration, ans, 30)	
 	}
 	
 }

@@ -11,6 +11,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func Init() {
+
+}
+
 func main() {
 	e := echo.New()
 	
@@ -29,8 +33,10 @@ func main() {
 	// Use a buffered channel to avoid missing signals as recommended for signal.Notify
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
+
 	// block until received interrupt signal
 	<-quit
+
 	log.Println("starting server shutdown")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

@@ -13,6 +13,7 @@ type User struct{
 	TimePreference	float64
 }
 
+
 // func (u *User) UnmarshalJSON(b []byte) (e error) {
 
 // }
@@ -66,4 +67,18 @@ func (user *User) GenerateNewCategoryID() (int) {
 	}
 
 	return id_list[len(id_list) - 1] + 1
+}
+
+// Gets all parents of a grouping including of a sub-grouping. Returns array that includes given sub-grouping + all parent groupings
+func (user *User) GetAllParents(grouping *tasks.TaskGrouping) ([]*tasks.TaskGrouping) {
+	if grouping.ChildOf == 0 {
+		return []*tasks.TaskGrouping{grouping}
+	}
+
+	parent, err := user.GetCategory(grouping.ChildOf)
+	if err != nil {
+		return []*tasks.TaskGrouping{}
+	}
+
+	return append(user.GetAllParents(parent), grouping)
 }
