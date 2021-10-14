@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func BenchmarkTimeScore(b *testing.B) {
+func BenchmarkScore(b *testing.B) {
 	tests := []struct{
 		want		float64
 		duration 	time.Duration
@@ -38,7 +38,7 @@ func BenchmarkTimeScore(b *testing.B) {
 	}
 
 	for _, tt := range(tests) {
-		ans := scoring.GiveTimeScore(tt.duration, 30) 
+		ans := scoring.GiveScore(tt.duration, 30, 1.2, 1.2) 
 		b.Logf("t: %v got score %v with time preference of: %v\n", tt.duration, ans, 30)	
 	}
 	

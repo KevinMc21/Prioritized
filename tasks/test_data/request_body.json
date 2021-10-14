@@ -1,0 +1,11 @@
+{
+	"time_preference": 30,
+	"operations": {
+		"task_grouping": {
+			"tasks": [
+				{}
+			],
+			"weight_coef": 1.3
+		}
+	}
+}

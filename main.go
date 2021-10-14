@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Prioritized/v0/server"
 	"context"
 	"log"
 	"net/http"
@@ -8,19 +9,27 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )
 
-func Init() {
+type  CustomValidator struct{
+	validator 	*validator.Validate
+}
 
+func (cv *CustomValidator) Validate(i interface{}) error {
+	if err := cv.validator.Struct(i); err != nil {
+	  // Optionally, you could return the error to give each route more control over the status code
+	  return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return nil
 }
 
 func main() {
 	e := echo.New()
+	e.Validator = &CustomValidator{validator: validator.New()}
 	
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
+	e.GET("/insert", server.InsertTaskHandler)
 
 	go func () {
 		if err := e.Start(":8000"); err != nil && err != http.ErrServerClosed {
