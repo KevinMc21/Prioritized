@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Prioritized/v0/loggers/debug"
 	"Prioritized/v0/server"
 	"context"
 	"log"
@@ -26,6 +27,9 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 }
 
 func main() {
+	if err := debug.InitDebugLogger(); err != nil {
+		log.Fatal(err)
+	}
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
 	

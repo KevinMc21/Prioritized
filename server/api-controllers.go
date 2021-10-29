@@ -2,6 +2,7 @@ package server
 
 import (
 	"Prioritized/v0/scoring"
+	"Prioritized/v0/sorting"
 	"Prioritized/v0/tasks"
 	"net/http"
 
@@ -43,5 +44,7 @@ func InsertTaskHandler(c echo.Context) error {
 		return c.JSON(http.StatusOK, inserted)
 	}
 
-	return c.JSON(http.StatusOK, body)
+	sorted := sorting.GreedySortWithInsert(body.TaskGrouping.Tasks, task)
+
+	return c.JSON(http.StatusOK, sorted)
 }

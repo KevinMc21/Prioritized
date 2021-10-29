@@ -15,4 +15,3 @@ type currentTasks struct{
 	Fixed		bool		`json:"fixed"`
 }
 
-
