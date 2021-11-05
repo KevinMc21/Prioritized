@@ -34,6 +34,7 @@ func main() {
 	e.Validator = &CustomValidator{validator: validator.New()}
 	
 	e.GET("/insert", server.InsertTaskHandler)
+	e.GET("/sort", server.SortTaskHandler)
 
 	go func () {
 		if err := e.Start(":8000"); err != nil && err != http.ErrServerClosed {
