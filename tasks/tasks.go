@@ -8,8 +8,8 @@ import (
 // Structure of task data
 type Task struct{
 	Name		string		`json:"name,omitempty" validate:"required"`
-	Timeline	timePeriod	`json:"timeline,omitempty"` // Provide a start time and deadline for a task. Optional
-	AssignedTime	timePeriod	`json:"assigned_time,omitempty"` // time assigned to task
+	Timeline	Period	`json:"timeline,omitempty"` // Provide a start time and deadline for a task. Optional
+	AssignedTime	Period	`json:"assigned_time,omitempty"` // time assigned to task
 	Fixed		bool		`json:"fixed,omitempty"`
 	EstimatedTime	time.Duration	`json:"estimated_time,omitempty" validate:"required,min=1m"` // How much time to spend on the task
 	WeightCoef	float64		`json:"weight_coef,omitempty" validate:"required,min=1,max=2"` // The weight coefficient for the specific task. Grouping coefficient will also be considered 
@@ -19,8 +19,8 @@ type Task struct{
 func (t *Task) UnmarshalJSON(b []byte) error {
 	var temp struct{
 		Name		string		`json:"name,omitempty" validate:"required"`
-		Timeline	timePeriod	`json:"timeline,omitempty"` // Provide a start time and deadline for a task. Optional
-		AssignedTime	timePeriod	`json:"assigned_time,omitempty"` // time assigned to task
+		Timeline	Period	`json:"timeline,omitempty"` // Provide a start time and deadline for a task. Optional
+		AssignedTime	Period	`json:"assigned_time,omitempty"` // time assigned to task
 		Fixed		bool		`json:"fixed,omitempty"`
 		EstimatedTime	string		`json:"estimated_time,omitempty" validate:"required,min=1m"` // How much time to spend on the task
 		WeightCoef	float64		`json:"weight_coef,omitempty" validate:"required,min=1,max=2"` // The weight coefficient for the specific task. Grouping coefficient will also be considered 
@@ -46,8 +46,8 @@ func (t *Task) UnmarshalJSON(b []byte) error {
 func (t *Task) MarshalJSON() ([]byte, error) {
 	var temp struct{
 		Name		string		`json:"name,omitempty" validate:"required"`
-		Timeline	timePeriod	`json:"timeline,omitempty"` // Provide a start time and deadline for a task. Optional
-		AssignedTime	timePeriod	`json:"assigned_time,omitempty"` // time assigned to task
+		Timeline	Period		`json:"timeline,omitempty"` // Provide a start time and deadline for a task. Optional
+		AssignedTime	Period		`json:"assigned_time,omitempty"` // time assigned to task
 		Fixed		bool		`json:"fixed,omitempty"`
 		EstimatedTime	string		`json:"estimated_time,omitempty" validate:"required,min=1m"` // How much time to spend on the task
 		WeightCoef	float64		`json:"weight_coef,omitempty"` // The weight coefficient for the specific task. Grouping coefficient will also be considered 

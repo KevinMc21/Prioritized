@@ -44,7 +44,7 @@ func InsertTaskHandler(c echo.Context) error {
 		return c.JSON(http.StatusOK, inserted)
 	}
 
-	sorted := sorting.GreedySortWithInsert(body.TaskGrouping.Tasks, task)
+	sorted := sorting.GreedySortWithInsert(body.TaskGrouping, task)
 
 	return c.JSON(http.StatusOK, sorted)
 }
