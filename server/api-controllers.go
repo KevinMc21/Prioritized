@@ -23,7 +23,7 @@ const (
 type InsertTaskRequest struct{
 	Preferences		float64			`json:"preference"`		
 	TaskGrouping		tasks.TaskGrouping	`json:"task_grouping" validate:"required"`
-	Task 			tasks.Task		`json:"task" validate:"required"`
+	InsertTasks 		[]tasks.Task		`json:"insert_tasks" validate:"required"`
 }
 
 func InsertTaskHandler(c echo.Context) error {
@@ -35,16 +35,19 @@ func InsertTaskHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	task := body.Task
-	score := scoring.GiveScore(task.EstimatedTime, body.Preferences, body.Task.WeightCoef, body.TaskGrouping.WeightCoef)
-	task.CurrentScore = score
+	scoredTasks := []tasks.Task{}
+	for _, task := range body.InsertTasks {
+		score := scoring.GiveScore(task.EstimatedTime, body.Preferences, task.WeightCoef, body.TaskGrouping.WeightCoef)
+		task.CurrentScore = score
+		scoredTasks = append(scoredTasks, task)
+	}
 
 	if len(body.TaskGrouping.Tasks) == 0 {
-		inserted := append(body.TaskGrouping.Tasks, task)
+		inserted := append(body.TaskGrouping.Tasks, scoredTasks...)
 		return c.JSON(http.StatusOK, inserted)
 	}
 
-	sorted := sorting.GreedySortWithInsert(body.TaskGrouping, task)
+	sorted := sorting.GreedySortWithInsert(body.TaskGrouping, scoredTasks)
 
 	return c.JSON(http.StatusOK, sorted)
 }
