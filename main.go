@@ -37,7 +37,11 @@ func main() {
 	e.GET("/sort", server.SortTaskHandler)
 
 	go func () {
-		if err := e.Start(":8000"); err != nil && err != http.ErrServerClosed {
+		port := os.Getenv("HTTP_PORT")
+		if port == "" {
+			port= "8000"
+		}
+		if err := e.Start(":" + port); err != nil && err != http.ErrServerClosed {
 			e.Logger.Fatalf("crashed: %v\n", err)
 			log.Panicln("server crashed")
 		}

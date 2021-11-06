@@ -1,6 +1,7 @@
 package sorting
 
 import (
+	"Prioritized/v0/loggers/debug"
 	"Prioritized/v0/tasks"
 	"math"
 	"sort"
@@ -8,6 +9,11 @@ import (
 )
 
 func GreedySortWithInsert(t tasks.TaskGrouping, insert []tasks.Task) []tasks.Task {
+	// for _, task := range insert {
+	// 	task.AssignedTime.TimeStart = time.Time{}
+	// 	task.AssignedTime.TimeEnd = time.Time{}
+	// }
+
 	t.Tasks = append(t.Tasks, insert...)
 	return GreedySort(t)
 }
@@ -76,6 +82,7 @@ func assignTimes(t []tasks.Task, periods []tasks.Period) (assigned []tasks.Task)
 		task.AssignedTime.TimeEnd = timeToInsert
 		assigned = append(assigned, task)
 	}
+	debug.GetDebugLogger().Println(assigned)
 
 	previouSwap := -1
 	found := false
@@ -102,14 +109,11 @@ func assignTimes(t []tasks.Task, periods []tasks.Period) (assigned []tasks.Task)
 			}
 		}
 
-		temp := t[task].AssignedTime
-		t[task].AssignedTime = t[swapIndex].AssignedTime
-		t[swapIndex].AssignedTime = temp
-		
-		assigned[task] = t[swapIndex]
-		assigned[swapIndex] = t[task]
+		assigned[task].AssignedTime, assigned[swapIndex].AssignedTime = assigned[swapIndex].AssignedTime, assigned[task].AssignedTime
+		assigned[task], assigned[swapIndex] = assigned[swapIndex], assigned[task]
 		previouSwap = swapIndex
 	}
+	debug.GetDebugLogger().Println(assigned)
 
 	return
 }
