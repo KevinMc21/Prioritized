@@ -44,7 +44,7 @@ func GreedySort(t tasks.TaskGrouping) []tasks.Task {
 		}
 	}
 
-	assigned := assignTimes(sorted, t.TimeRanges, t.Weekdays)
+	assigned := AssignTimes(sorted, t.TimeRanges, t.Weekdays)
 
 	return assigned
 }
@@ -66,7 +66,9 @@ func scoreOf(t tasks.Task) float64 {
 	return t.CurrentScore
 }
 
-func assignTimes(t []tasks.Task, periods []tasks.Period, weekdaysAvailable []time.Weekday) (assigned []tasks.Task) {
+// AssignTimes will assign times to tasks inside of t, assigned times will be between the time periods specified by periods.
+// Tasks will not be assigned on days not included in weekdaysAvailable. To include all days, pass in []time.Weekday{}
+func AssignTimes(t []tasks.Task, periods []tasks.Period, weekdaysAvailable []time.Weekday) (assigned []tasks.Task) {
 	timeToInsert := time.Now().In(periods[0].TimeStart.Location())	
 	pastDeadline := []int{}
 
