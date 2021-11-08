@@ -110,6 +110,7 @@ func assignTimes(t []tasks.Task, periods []tasks.Period) (assigned []tasks.Task)
 		}
 
 		assigned[task].AssignedTime, assigned[swapIndex].AssignedTime = assigned[swapIndex].AssignedTime, assigned[task].AssignedTime
+
 		assigned[task], assigned[swapIndex] = assigned[swapIndex], assigned[task]
 		previouSwap = swapIndex
 	}
