@@ -1,8 +1,8 @@
 package sorting
 
 import (
-	"Prioritized/v0/loggers/debug"
 	"Prioritized/v0/tasks"
+	"fmt"
 	"math"
 	"sort"
 	"time"
@@ -44,7 +44,7 @@ func GreedySort(t tasks.TaskGrouping) []tasks.Task {
 		}
 	}
 
-	assigned := assignTimes(sorted, t.TimeRanges)
+	assigned := assignTimes(sorted, t.TimeRanges, t.Weekdays)
 
 	return assigned
 }
@@ -66,12 +66,14 @@ func scoreOf(t tasks.Task) float64 {
 	return t.CurrentScore
 }
 
-func assignTimes(t []tasks.Task, periods []tasks.Period) (assigned []tasks.Task) {
+func assignTimes(t []tasks.Task, periods []tasks.Period, weekdaysAvailable []time.Weekday) (assigned []tasks.Task) {
 	timeToInsert := time.Now().In(periods[0].TimeStart.Location())	
 	pastDeadline := []int{}
 
 	for i, task := range t {
-		timeToInsert = nextTimeAfter(timeToInsert, periods)
+		timeOnTaskDuration, _ := time.ParseDuration("30m")
+		timeToInsert = nextTimeAfter(timeToInsert, periods, task.EstimatedTime.Round(timeOnTaskDuration))
+		timeToInsert = moveDay(timeToInsert, weekdaysAvailable)
 
 		if !withinTimeline(timeToInsert, task.Timeline) {
 			pastDeadline = append(pastDeadline, i)
@@ -82,7 +84,6 @@ func assignTimes(t []tasks.Task, periods []tasks.Period) (assigned []tasks.Task)
 		task.AssignedTime.TimeEnd = timeToInsert
 		assigned = append(assigned, task)
 	}
-	debug.GetDebugLogger().Println(assigned)
 
 	previouSwap := -1
 	found := false
@@ -114,14 +115,45 @@ func assignTimes(t []tasks.Task, periods []tasks.Period) (assigned []tasks.Task)
 		assigned[task], assigned[swapIndex] = assigned[swapIndex], assigned[task]
 		previouSwap = swapIndex
 	}
-	debug.GetDebugLogger().Println(assigned)
 
 	return
 }
 
+func moveDay(timeToChange time.Time, weekdays []time.Weekday) time.Time {
+	if len(weekdays) == 0 {
+		return timeToChange
+	}
+
+	currentWeekday := timeToChange.Weekday()
+
+	weekdaysAvailable := make(map[time.Weekday]bool)
+	for _, weekday := range weekdays {
+		if weekday == currentWeekday {
+			return timeToChange
+		}
+		weekdaysAvailable[weekday] = true
+	}
+
+	moveDays := currentWeekday
+	for i := 0; i < 7; i++ {
+		moveDays++
+		if _, ok := weekdaysAvailable[moveDays % 7]; ok {
+			duration, err := time.ParseDuration(fmt.Sprintf("%dh", (moveDays - currentWeekday) * 24))
+			if err != nil {
+				return timeToChange
+			}
+
+			return timeToChange.Add(duration)
+		}
+	}
+
+
+	return timeToChange
+}
+
 // Returns the beginning of the next valid time period
-func nextTimeAfter(t time.Time, periods []tasks.Period) time.Time {
-	if timeBetween(t, periods) {
+func nextTimeAfter(t time.Time, periods []tasks.Period, durationOffset time.Duration) time.Time {
+	if timeBetween(t, periods) && timeBetween(t.Add(durationOffset), periods) {
 		return t
 	}
 
@@ -131,7 +163,7 @@ func nextTimeAfter(t time.Time, periods []tasks.Period) time.Time {
 		hourStart, _, _ := period.TimeStart.Clock()
 
 		if hourStart > h1 {
-			return time.Date(t.Year(), t.Month(), t.Day() + 1, period.TimeStart.Hour(), period.TimeStart.Minute(), period.TimeStart.Second(), 0, t.Location())
+			return time.Date(t.Year(), t.Month(), t.Day(), period.TimeStart.Hour(), period.TimeStart.Minute(), period.TimeStart.Second(), 0, t.Location())
 		}
 	}
 

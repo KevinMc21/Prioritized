@@ -36,6 +36,7 @@ func InsertTaskHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	
 	scoredTasks := []tasks.Task{}
 	for _, task := range body.InsertTasks {
 		score := scoring.GiveScore(task.EstimatedTime, body.Preference, task.WeightCoef, body.TaskGrouping.WeightCoef)
