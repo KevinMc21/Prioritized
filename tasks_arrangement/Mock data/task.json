@@ -1,0 +1,75 @@
+{
+    "task_grouping": {
+        "weight_coef": 1.0,
+        "time_ranges": [
+            {
+                "time_start": "0000-01-01T09:00:00+07:00",
+                "time_end": "0000-01-01T12:00:00+07:00"
+            },
+            {
+                "time_start": "0000-01-01T13:00:00+07:00",
+                "time_end": "0000-01-01T17:00:00+07:00"
+            }
+        ],
+        "weekdays": [],
+        "tasks": [
+            {
+                "name": "Do Task1",
+                "timeline": {
+                    "time_start": "2021-10-01T00:00:00+07:00",
+                    "time_end": "2021-11-10T00:00:00+07:00"
+                },
+                "assigned_time": {
+                    "time_start": "2021-11-21T12:00:00+07:00",
+                    "time_end": "2021-11-21T12:00:00+07:00"
+                },
+                "fixed": false,
+                "estimated_time": "1h30m0s",
+                "current_score": 2000
+            },
+            {
+                "name": "Do Task2",
+                "assigned_time": {
+                    "time_start": "2021-09-21T12:00:00+07:00",
+                    "time_end": "2021-11-21T12:00:00+07:00"
+                },
+                "fixed": false,
+                "estimated_time": "1h30m0s",
+                "current_score": 1800
+            },
+            {
+                "name": "Do Task3",
+                "assigned_time": {
+                    "time_start": "2021-09-21T12:00:00+07:00",
+                    "time_end": "2021-09-21T14:00:00+07:00"
+                },
+                "fixed": false,
+                "estimated_time": "1h30m0s",
+                "current_score": 2000
+            },
+            {
+                "name": "Do Task5",
+                "assigned_time": {
+                    "time_start": "2021-09-21T12:00:00+07:00",
+                    "time_end": "2021-09-21T14:00:00+07:00"
+                },
+                "timeline": {
+                    "time_end": "2021-05-01T00:00:00+07:00"
+                },
+                "fixed": false,
+                "estimated_time": "1h30m0s",
+                "current_score": 2523
+            },
+            {
+                "name": "Do Task6",
+                "assigned_time": {
+                    "time_start": "2021-09-21T12:00:00+07:00",
+                    "time_end": "2021-09-21T14:00:00+07:00"
+                },
+                "fixed": false,
+                "estimated_time": "1h30m0s",
+                "current_score": 2069
+            }
+        ]
+    }
+}
