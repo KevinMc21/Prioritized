@@ -39,7 +39,6 @@ func InsertTaskHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	
 	scoredTasks := []tasks.Task{}
 	for _, task := range body.InsertTasks {
 		score := scoring.GiveScore(task.EstimatedTime, body.Preference, task.WeightCoef, body.TaskGrouping.WeightCoef)
@@ -99,6 +98,7 @@ func InsertTaskGeneticHandler(c echo.Context) error {
 
 	var TaskAsignment []GeneticAlgo.Day
 	var tempTask []tasks.Task
+	tempTask = append(tempTask, allTask...)
 
 	for len(tempTask) != 0 {
 		Ouput, leftover := GeneticAlgo.RunGeneticAlgorithm(tempTask)
