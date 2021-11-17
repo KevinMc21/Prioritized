@@ -11,6 +11,7 @@ import (
 type Day struct {
 	Items       [8]tasks.Task
 	ItemsMap    map[string]time.Duration
+	WeightCoef  float64
 	Fitness     float64
 	TotatEnergy float64
 }
@@ -18,7 +19,6 @@ type Day struct {
 func NewBag(taskArr []tasks.Task) *Day {
 	var tempArr []tasks.Task
 	tempArr = append(tempArr, taskArr...)
-	// var tempMap map[string]time.Duration = make(map[string]time.Duration)
 	B := new(Day)
 
 	B.ItemsMap = make(map[string]time.Duration)
@@ -31,7 +31,6 @@ func NewBag(taskArr []tasks.Task) *Day {
 		if len(tempArr) > 0 {
 			choosedTaskIndex := 0
 			rand.Seed(time.Now().UnixNano())
-			// fmt.Println("Len : ", len(tempArr), choosedTaskIndex)
 
 			if len(tempArr) > 1 {
 				choosedTaskIndex = rand.Intn(len(tempArr) - 1)
@@ -42,9 +41,6 @@ func NewBag(taskArr []tasks.Task) *Day {
 			B.Items[i] = tempArr[choosedTaskIndex]
 			fmt.Println("End Gene", len(tempArr))
 			tempArr = deductedHour(tempArr, 30, tempArr[choosedTaskIndex].Name)
-			// for _, i := range tempArr {
-			// 	fmt.Println(len(tempArr), "TempArr In Generate : ", i)
-			// }
 		} else {
 			B.Items[i] = tasks.Task{}
 		}
@@ -59,7 +55,6 @@ func (D *Day) CalFitness() {
 	D.TotatEnergy = 3000
 	D.Fitness = 0
 	if D.CheckSlot() {
-		// fmt.Print("CALFIT SET 0 : ", D.CheckSlot(), D.TotatEnergy)
 		D.Fitness = 0
 	} else {
 		for m, i := range D.Items {
@@ -90,8 +85,6 @@ func (D *Day) CheckSlot() bool {
 				fmt.Print(i.Name)
 			}
 			fmt.Println(" Time : ", timeD, D.ItemsMap[i.Name], i.Name)
-
-			// fmt.Println(timeD, D.ItemsMap[i.Name])
 			return true
 		}
 	}
@@ -99,28 +92,24 @@ func (D *Day) CheckSlot() bool {
 }
 
 func deductedHour(DTask []tasks.Task, preferedTime int, Name string) []tasks.Task {
-	// fmt.Println("Check in Deduct len : ", len(DTask))
 	choosenIndex := tasks.SearchTask(Name, &DTask)
 	pointerTask := DTask[choosenIndex]
 	thistime, _ := time.ParseDuration("30m")
 	pointerTask.EstimatedTime = pointerTask.EstimatedTime - thistime
 
-	pointerTask.CurrentScore = scoring.GiveScore(pointerTask.EstimatedTime, 30, 1, 1)
+	pointerTask.CurrentScore = scoring.GiveScore(pointerTask.EstimatedTime, 30, pointerTask.WeightCoef, pointerTask.WeightCoef)
 
 	DTask[choosenIndex].EstimatedTime = pointerTask.EstimatedTime
 	DTask[choosenIndex].CurrentScore = pointerTask.CurrentScore
 
 	if lessThan(DTask[choosenIndex].EstimatedTime) {
-		// fmt.Println("Delete: ", DTask[choosenIndex].EstimatedTime, DTask[choosenIndex].Name)
 		DTask = remove(DTask, choosenIndex)
-		// fmt.Println("Lennnn : ", len(DTask))
 	}
 
 	return DTask
 }
 
 func lessThan(t time.Duration) bool {
-	// fmt.Println("DELETE!!!!!!!!!!!!!")
 	return t.Hours() <= 0 && t.Seconds() <= 0 && t.Minutes() <= 0
 }
 

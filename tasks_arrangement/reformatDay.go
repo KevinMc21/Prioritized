@@ -39,9 +39,6 @@ func ReformatDay(task []GeneticAlgo.Day) []tasks.Task {
 		currentDatePointer++
 	}
 
-	for _, i := range sortedTask {
-		fmt.Println("CHECKING! : ", i.AssignedTime.TimeStart.String(), i.AssignedTime.TimeEnd.String())
-	}
 	return sortedTask
 }
 

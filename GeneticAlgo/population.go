@@ -18,9 +18,6 @@ func (p *Population) GenPopulation(taskArr []tasks.Task) {
 		p.PopList[len(p.PopList)-1].CalFitness()
 		tempArr = taskArr
 	}
-
-	// max, ndmax := p.GetFitness()
-	// fmt.Println("Max : ", max, " Second Max : ", ndmax)
 }
 
 func (p *Population) GetFitness() (Day, Day) {

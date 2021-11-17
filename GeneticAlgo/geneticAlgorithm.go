@@ -2,7 +2,6 @@ package GeneticAlgo
 
 import (
 	"Prioritized/v0/tasks"
-	"fmt"
 	"math/rand"
 	"time"
 
@@ -30,14 +29,9 @@ func (g *GA) Start(taskArr []tasks.Task) Day {
 		g.SecondMaxFitness = g.pop.PopList[1]
 
 		diff := g.MaxFitness.Fitness - g.LastGenFitness.Fitness
-		fmt.Print("different : ", diff, " || ")
 
 		g.LastGenFitness = g.MaxFitness
 		if uint(diff) <= 1 && g.Generation >= 30 && g.MaxFitness.Fitness != 0 {
-			fmt.Println("Ans : ", g.MaxFitness.Fitness)
-			for _, i := range g.MaxFitness.Items {
-				fmt.Printf("TasK : %v - ", i.CurrentScore)
-			}
 			Ongoing = false
 			break
 		}
@@ -51,20 +45,12 @@ func (g *GA) Start(taskArr []tasks.Task) Day {
 
 		g.pop.SortByFitness()
 
-		fmt.Println("Generation : ", g.Generation, " Max fit : ", g.MaxFitness.Fitness, "Energy : ", g.MaxFitness.TotatEnergy)
-
-		fmt.Printf("List : ")
-		for _, i := range g.MaxFitness.Items {
-			fmt.Printf(" %v ", i.Name)
-		}
-		fmt.Printf("\n")
 	}
 	return g.MaxFitness
 }
 
 func (g *GA) crossover(P1 Day, P2 Day) (Day, Day) {
 	rand.Seed(time.Now().UnixNano())
-	// fmt.Printf("Pick : %d : %d -->", P1, P2)
 	crossoverpoint := rand.Intn(len(P1.Items))
 	for i := 0; i < crossoverpoint; i++ {
 		temp := P1.Items[i]
@@ -74,7 +60,6 @@ func (g *GA) crossover(P1 Day, P2 Day) (Day, Day) {
 	}
 	P1.CalFitness()
 	P2.CalFitness()
-	// fmt.Printf(" Out : %d : %d \n", P1, P2)
 	return P1, P2
 }
 
@@ -131,33 +116,12 @@ func RunGeneticAlgorithm(task []tasks.Task) (Day, []tasks.Task) {
 	Output := G.Start(tempArr)
 
 	for _, i := range Output.Items {
-		fmt.Println("Output : ", i.Name, i.EstimatedTime)
-	}
-
-	for _, i := range Output.Items {
-		// fmt.Println("Start Len", task[tasks.SearchTask(i.Name, &task)].EstimatedTime, i.Name)
-		fmt.Println("Before Set", len(task), len(tempArr), i.Name)
 
 		if i.CurrentScore != 0 {
 			tempArr = deductedHour(tempArr, 30, i.Name)
 		}
-		// fmt.Println("After Set", len(task), len(tempArr), len(Output), i.Name)
+
 	}
 
-	for _, i := range tempArr {
-		fmt.Println("Left over : ", i.Name, i.EstimatedTime)
-	}
-
-	fmt.Println("END!", len(tempArr))
 	return Output, tempArr
 }
-
-// func flip(taskArr []tasks.Task, curTask tasks.Task) tasks.Task {
-// 	rand.Seed(time.Now().UTC().UnixNano())
-// 	mutateIndex := rand.Intn(len(taskArr))
-// 	if taskArr[mutateIndex] != curTask {
-// 		return taskArr[mutateIndex]
-// 	} else {
-// 		return flip(taskArr, curTask)
-// 	}
-// }
