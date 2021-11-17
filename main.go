@@ -14,14 +14,14 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type  CustomValidator struct{
-	validator 	*validator.Validate
+type CustomValidator struct {
+	validator *validator.Validate
 }
 
 func (cv *CustomValidator) Validate(i interface{}) error {
 	if err := cv.validator.Struct(i); err != nil {
-	  // Optionally, you could return the error to give each route more control over the status code
-	  return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		// Optionally, you could return the error to give each route more control over the status code
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	return nil
 }
@@ -32,14 +32,15 @@ func main() {
 	}
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
-	
+
 	e.GET("/insert", server.InsertTaskHandler)
 	e.GET("/sort", server.SortTaskHandler)
+	e.GET("/getfromGenetic", server.InsertTaskGeneticHandler)
 
-	go func () {
+	go func() {
 		port := os.Getenv("HTTP_PORT")
 		if port == "" {
-			port= "8000"
+			port = "8000"
 		}
 		if err := e.Start(":" + port); err != nil && err != http.ErrServerClosed {
 			e.Logger.Fatalf("crashed: %v\n", err)
@@ -47,7 +48,7 @@ func main() {
 		}
 	}()
 
-	// Wait for interrupt signal to gracefully shutdown the server with a timeout of 10 seconds. 
+	// Wait for interrupt signal to gracefully shutdown the server with a timeout of 10 seconds.
 	// Use a buffered channel to avoid missing signals as recommended for signal.Notify
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
