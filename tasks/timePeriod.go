@@ -2,9 +2,9 @@ package tasks
 
 import "time"
 
-type Period struct{
-	TimeStart	time.Time	`json:"time_start"`
-	TimeEnd		time.Time	`json:"time_end"`
+type Period struct {
+	TimeStart time.Time `json:"time_start"`
+	TimeEnd   time.Time `json:"time_end"`
 }
 
 func ValidWeekday(wd time.Weekday) bool {
@@ -33,4 +33,3 @@ type SortByWeekday []time.Weekday
 func (a SortByWeekday) Len() int           { return len(a) }
 func (a SortByWeekday) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a SortByWeekday) Less(i, j int) bool { return int(a[i]) < int(a[j]) }
-
