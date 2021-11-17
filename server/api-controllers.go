@@ -109,5 +109,7 @@ func InsertTaskGeneticHandler(c echo.Context) error {
 
 	}
 
-	return c.JSON(http.StatusOK, TaskAsignment)
+	formatted := tasksarrangement.ReformatDay(TaskAsignment)
+
+	return c.JSON(http.StatusOK, formatted)
 }
