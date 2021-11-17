@@ -4,6 +4,7 @@
 - [x] Categories / Adjustable Times / Sub Types
 - [x] Task Manager / Category Groupings
 - [x] Auto Scheduler / Based on Task and Category importance
+- [x] 2 Algorithm to choose / Genetic Algorithm or Greedy Algorithm
 
 # Prioritized API Documentation
 ## Endpoints
@@ -155,7 +156,7 @@ type: json
 }
 ```
 
-### To /sort:
+### To /sort or /getfromGenetic:
 ```
 {
     "task_grouping": { # Send one task grouping
