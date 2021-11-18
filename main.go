@@ -33,9 +33,9 @@ func main() {
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
 
-	e.GET("/insert", server.InsertTaskHandler)
-	e.GET("/sort", server.SortTaskHandler)
-	e.GET("/getfromGenetic", server.InsertTaskGeneticHandler)
+	e.POST("/insert", server.InsertTaskHandler)
+	e.POST("/sort", server.SortTaskHandler)
+	e.POST("/getfromGenetic", server.InsertTaskGeneticHandler)
 
 	go func() {
 		port := os.Getenv("HTTP_PORT")
