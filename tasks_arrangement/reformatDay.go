@@ -19,6 +19,7 @@ func ReformatDay(task []GeneticAlgo.Day) []tasks.Task {
 		checkcursor := time.Date(time.Now().Year(), time.Now().Month(), (time.Now().Day() + currentDatePointer + 1), 0, 0, 0, 0, time.Local).Weekday().String()
 		for checkcursor == "Saturday" || checkcursor == "Sunday" {
 			currentDatePointer++
+			checkcursor = time.Date(time.Now().Year(), time.Now().Month(), (time.Now().Day() + currentDatePointer + 1), 0, 0, 0, 0, time.Local).Weekday().String()
 		}
 
 		for h, t := range sortArr {

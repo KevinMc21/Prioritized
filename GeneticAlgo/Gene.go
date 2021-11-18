@@ -97,7 +97,7 @@ func deductedHour(DTask []tasks.Task, preferedTime int, Name string) []tasks.Tas
 	thistime, _ := time.ParseDuration("30m")
 	pointerTask.EstimatedTime = pointerTask.EstimatedTime - thistime
 
-	pointerTask.CurrentScore = scoring.GiveScore(pointerTask.EstimatedTime, 30, pointerTask.WeightCoef, pointerTask.WeightCoef)
+	pointerTask.CurrentScore = scoring.GiveScore(pointerTask.EstimatedTime, 30, 1, 1)
 
 	DTask[choosenIndex].EstimatedTime = pointerTask.EstimatedTime
 	DTask[choosenIndex].CurrentScore = pointerTask.CurrentScore
