@@ -2,6 +2,7 @@ package tasksarrangement
 
 import (
 	"Prioritized/v0/GeneticAlgo"
+	"Prioritized/v0/scoring"
 	"Prioritized/v0/tasks"
 	"fmt"
 	"time"
@@ -15,10 +16,12 @@ func ReformatDay(task []GeneticAlgo.Day) []tasks.Task {
 	currentDatePointer := 0
 	for _, i := range task {
 		var tempTask tasks.Task
+
 		sortArr := sortTask(i.Items)
 		checkcursor := time.Date(time.Now().Year(), time.Now().Month(), (time.Now().Day() + currentDatePointer + 1), 0, 0, 0, 0, time.Local).Weekday().String()
 		for checkcursor == "Saturday" || checkcursor == "Sunday" {
 			currentDatePointer++
+			checkcursor = time.Date(time.Now().Year(), time.Now().Month(), (time.Now().Day() + currentDatePointer + 1), 0, 0, 0, 0, time.Local).Weekday().String()
 		}
 
 		for h, t := range sortArr {
@@ -26,9 +29,16 @@ func ReformatDay(task []GeneticAlgo.Day) []tasks.Task {
 			if t.EstimatedTime.String() == "0s" {
 				break
 			}
+
 			tempTask.Name = t.Name
-			fmt.Println("Print Name : ", tempTask.Name, t.Name)
-			tempTask.CurrentScore = t.CurrentScore
+
+			if int(t.CurrentScore) == -9223372036854775808 {
+				tempTask.CurrentScore = scoring.GiveScore(t.EstimatedTime, 30, t.WeightCoef, 1)
+				fmt.Println(t.Name, t.WeightCoef, t.EstimatedTime, scoring.GiveScore(t.EstimatedTime, 30, t.WeightCoef, 1))
+			} else {
+				tempTask.CurrentScore = t.CurrentScore
+			}
+
 			tempTask.Timeline = t.Timeline
 			tempTask.AssignedTime.TimeStart = dateNow
 			timeAdd, _ := time.ParseDuration("30m")
@@ -38,7 +48,6 @@ func ReformatDay(task []GeneticAlgo.Day) []tasks.Task {
 		}
 		currentDatePointer++
 	}
-
 	return sortedTask
 }
 
@@ -51,6 +60,7 @@ func sortTask(taskArr [8]tasks.Task) [8]tasks.Task {
 	pos := 0
 
 	for _, i := range taskArr {
+		fmt.Println("Print Name : ", i.Name, i.CurrentScore)
 		if !checkMap[i.Name] {
 			for _, j := range taskArr {
 				if i.Name == j.Name {

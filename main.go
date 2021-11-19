@@ -4,6 +4,7 @@ import (
 	"Prioritized/v0/loggers/debug"
 	"Prioritized/v0/server"
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -33,9 +34,9 @@ func main() {
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
 
-	e.GET("/insert", server.InsertTaskHandler)
-	e.GET("/sort", server.SortTaskHandler)
-	e.GET("/getfromGenetic", server.InsertTaskGeneticHandler)
+	e.POST("/insert", server.InsertTaskHandler)
+	e.POST("/sort", server.SortTaskHandler)
+	e.POST("/sortByGenetic", server.InsertTaskGeneticHandler)
 
 	go func() {
 		port := os.Getenv("HTTP_PORT")
@@ -47,6 +48,20 @@ func main() {
 			log.Panicln("server crashed")
 		}
 	}()
+
+	e.HTTPErrorHandler = customHTTPErrorHandler
+	// e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+	// 	return func(c echo.Context) error {
+	// 		// Extract the credentials from HTTP request header and perform a security
+	// 		// check
+
+	// 		// For invalid credentials
+	// 		return echo.NewHTTPError(http.StatusUnauthorized, "Please provide valid credentials")
+
+	// 		// For valid credentials call next
+	// 		// return next(c)
+	// 	}
+	// })
 
 	// Wait for interrupt signal to gracefully shutdown the server with a timeout of 10 seconds.
 	// Use a buffered channel to avoid missing signals as recommended for signal.Notify
@@ -66,4 +81,16 @@ func main() {
 		log.Println("server shutdown down properly")
 	}
 
+}
+
+func customHTTPErrorHandler(err error, c echo.Context) {
+	code := http.StatusInternalServerError
+	if he, ok := err.(*echo.HTTPError); ok {
+		code = he.Code
+	}
+	errorPage := fmt.Sprintf("%d.html", code)
+	if err := c.File(errorPage); err != nil {
+		c.Logger().Error(err)
+	}
+	c.Logger().Error(err)
 }

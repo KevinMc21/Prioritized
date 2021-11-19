@@ -15,6 +15,7 @@ func ScoreTask(t tasks.TaskGrouping, time time.Time) []tasks.Task {
 	for _, ts := range t.Tasks {
 		dateDiff := TimeDiff(curtime, ts)
 		ts.CurrentScore = sr.GiveScore(ts.EstimatedTime, 30, 1, t.WeightCoef) * (1 + dateDiff)
+		fmt.Println("AFTER SCORING : ", ts.CurrentScore)
 		fmt.Println("Pure Score : ", sr.GiveScore(ts.EstimatedTime, 30, 1, t.WeightCoef))
 		scoredTask = append(scoredTask, ts)
 	}
@@ -23,7 +24,7 @@ func ScoreTask(t tasks.TaskGrouping, time time.Time) []tasks.Task {
 }
 
 func TimeDiff(curtime time.Time, t tasks.Task) float64 {
-	deadline := t.AssignedTime.TimeEnd
+	deadline := t.Timeline.TimeEnd
 	yearC, monthC, dayC := curtime.Date()
 	yearA, monthA, dayA := deadline.Date()
 
