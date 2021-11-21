@@ -26,6 +26,7 @@ func (g *GA) Start(taskArr []tasks.Task) Day {
 	g.LastGenFitness.Fitness = 0
 	for Ongoing && g.Generation < g.MaxGen {
 		//Sort List
+		same := 0
 		g.MaxFitness = g.pop.PopList[0]
 		g.SecondMaxFitness = g.pop.PopList[1]
 
@@ -33,7 +34,8 @@ func (g *GA) Start(taskArr []tasks.Task) Day {
 		fmt.Print("different : ", diff, " || ")
 
 		g.LastGenFitness = g.MaxFitness
-		if uint(diff) <= 1 && g.Generation >= 30 && g.MaxFitness.Fitness != 0 {
+		if uint(diff) <= 1 && g.Generation >= 30 && same > 3 {
+			same++
 			fmt.Println("Ans : ", g.MaxFitness.Fitness)
 			for _, i := range g.MaxFitness.Items {
 				fmt.Printf("TasK : %v - ", i.CurrentScore)

@@ -82,18 +82,30 @@ func (D *Day) CheckSlot() bool {
 	checkMap := make(map[string]int)
 
 	for _, i := range D.Items {
-		checkMap[i.Name]++
+		if i.EstimatedTime != 0 {
+			checkMap[i.Name]++
+		}
+	}
+
+	for i := range checkMap {
 		var timeD time.Duration
 		timeM, _ := time.ParseDuration("30m")
 
-		for j := 1; j <= checkMap[i.Name]; j++ {
+		for j := 1; j <= checkMap[i]; j++ {
 			timeD += timeM
 		}
 
-		if timeD > (D.ItemsMap[i.Name]) {
+		if timeD > (D.ItemsMap[i]) {
+			for _, i := range D.Items {
+				fmt.Print(i.Name)
+			}
+			fmt.Println(" Time : ", timeD, D.ItemsMap[i], i)
+
+			// fmt.Println(timeD, D.ItemsMap[i.Name])
 			return true
 		}
 	}
+
 	return false
 }
 

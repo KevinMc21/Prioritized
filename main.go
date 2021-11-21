@@ -36,11 +36,7 @@ func main() {
 
 	e.POST("/insert", server.InsertTaskHandler)
 	e.POST("/sort", server.SortTaskHandler)
-<<<<<<< HEAD
 	e.POST("/sortByGenetic", server.InsertTaskGeneticHandler)
-=======
-	e.POST("/getfromGenetic", server.InsertTaskGeneticHandler)
->>>>>>> b91040a22fa95e28bc3b82fe2fa4e6be96079967
 
 	go func() {
 		port := os.Getenv("HTTP_PORT")
